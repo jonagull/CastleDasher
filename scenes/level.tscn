@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://1l0d51uffhx5"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_5xgho"]
+
+[node name="Level" type="Node3D" unique_id=986951910]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1870631818]
+transform = Transform3D(11, 0, 0, 0, 11, 0, 0, 0, 11, 0, 0, 0)
+mesh = SubResource("PlaneMesh_5xgho")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1034509866]
+transform = Transform3D(1, 0, 0, 0, 0.49999997, 0.86602545, 0, -0.86602545, 0.49999997, 0, 11, 12)
