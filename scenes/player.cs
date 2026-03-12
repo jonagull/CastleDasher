@@ -2,23 +2,32 @@ using Godot;
 
 public partial class Player : CharacterBody3D
 {
-	// How fast the player moves in meters per second.
 	[Export]
 	public int Speed { get; set; } = 14;
-	// The downward acceleration when in the air, in meters per second squared.
 	[Export]
 	public int FallAcceleration { get; set; } = 75;
+	[Export]
+	public float MouseSensitivity { get; set; } = 0.003f;
 
 	private Vector3 _targetVelocity = Vector3.Zero;
+	private Node3D _pivot;
 
 	public override void _Ready()
 	{
-		GD.Print("Player::Godot");
+		_pivot = GetNode<Node3D>("Pivot");
+		Input.MouseMode = Input.MouseModeEnum.Captured;
+	}
+
+	public override void _Input(InputEvent @event)
+	{
+		if (@event is InputEventMouseMotion mouseMotion)
+		{
+			_pivot.RotateY(-mouseMotion.Relative.X * MouseSensitivity);
+		}
 	}
 
 	public override void _PhysicsProcess(double delta)
 	{
-
 		var direction = Vector3.Zero;
 
 		if (Input.IsActionPressed("move_right"))
@@ -37,12 +46,21 @@ public partial class Player : CharacterBody3D
 		{
 			direction.Z -= 1.0f;
 		}
+		
+		if (Input.IsActionJustPressed("dash"))
+		{
+			Speed += 100;
+		}
+		
+		if (Input.IsActionJustReleased("dash"))
+		{
+			Speed -= 100;
+		}
 
 		if (direction != Vector3.Zero)
 		{
 			direction = direction.Normalized();
-			// Setting the basis property will affect the rotation of the node.
-			GetNode<Node3D>("Pivot").Basis = Basis.LookingAt(direction);
+			direction = _pivot.GlobalTransform.Basis * direction;
 		}
 
 		// Ground velocity
